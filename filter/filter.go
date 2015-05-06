@@ -24,10 +24,6 @@ func main() {
 	plain := flag.Bool("plain", false, "If only one column is provided, filter does not escape these line; instead it plainly prints it out.")
 	flag.Parse()
 
-	if *cols == "" {
-		usage()
-	}
-
 	var indexes []int
 	maxIndex := 0
 	scols := strings.Split(*cols, ",")
