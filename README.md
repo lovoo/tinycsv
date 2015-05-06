@@ -16,4 +16,4 @@ Usage of filter:
   -native=false: If only one column is provided, filter does not escape these line; instead it plainly prints it out.
 ```
 
-Get it by `go get -u github.com/lovoo/tinycsv/filter` and install it using `go install github.com/lovoo/tinycsv/filter`.
+Get it with `go get -u github.com/lovoo/tinycsv/filter` and install it using `go install github.com/lovoo/tinycsv/filter`.
