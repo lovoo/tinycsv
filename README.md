@@ -1,6 +1,6 @@
 # tinycsv
 
-A tiny CSV helper toolkit.
+tinycsv is a collection of tiny CSV helper tools which are in-use at LOVOO.
 
 ## filter
 
