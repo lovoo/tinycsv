@@ -14,7 +14,7 @@ go install github.com/lovoo/tinycsv/...
 `extract` allows you to extract columns from huge CSV encoded data. It reads either from a file or from stdin and outputs to stdout.
 
 ```
-$ extract
+$ extract --help
 extract prints out one or more columns from a CSV and reads from a file or stdin.
 
 Usage of ./extract:
@@ -35,3 +35,27 @@ $ head -n 5 output.csv | extract -cols 3
 2015-04-09 19:53:28
 2015-04-09 19:56:31
 ```
+
+## summary
+
+`summary` generates and plots a summary for numerical data encoded as CSV. It reads either from a file or from stdin and outputs to stdout.
+
+```
+$ summary --help
+Usage of ./summary:
+  -plot=false: plot a histogram and the standard normal distribution
+  -suppress=false: suppress warnings in the input data
+```
+
+### Example
+
+```
+$ extract -insertHeader abc -cols 0 -filename input.csv -n 1000000 -skipHeader | summary -plot -suppress
+
+	min		max		mean		stddev
+abc	-11.510000	647.890000	7.798770	7.843919
+```
+
+The generated plot:
+
+![](https://raw.githubusercontent.com/Lovoo/tinycsv/master/histogram.png)
