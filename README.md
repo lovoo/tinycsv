@@ -9,15 +9,6 @@ go get -u github.com/lovoo/tinycsv/...
 go install github.com/lovoo/tinycsv/...
 ```
 
-## summary
-
-`summary` generates and plots a summary for numerical data encoded as CSV. It reads either from a file or from stdin and outputs to stdout.
-
-```
-$ summary
-
-```
-
 ## extract
 
 `extract` allows you to extract columns from huge CSV encoded data. It reads either from a file or from stdin and outputs to stdout.
@@ -26,10 +17,12 @@ $ summary
 $ extract
 extract prints out one or more columns from a CSV and reads from a file or stdin.
 
-Usage of extract:
-  -cols="": the column index(es) (0-indexed) to be written out to stdout (separated by comma).
-  -filename="": CSV file (if empty, extract reads from stdin)
-  -plain=false: If only one column is provided, extract does not escape these line; instead it plainly prints it out.
+Usage of ./extract:
+  -cols="": the column index(es) to be written out to stdout
+  -delim=",": the CSV delimiter; default is ','
+  -filename="": CSV file (if empty, which is the default, extract reads from stdin)
+  -plain=false: If only one column is provided, extract does not escape these line; instead it plainly prints it out (default false).
+  -skipHeader=true: skips the first header line (default true)
 ```
 
 ### Example
