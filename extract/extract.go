@@ -22,9 +22,12 @@ func usage() {
 func main() {
 	filename := flag.String("filename", "", "CSV file (if empty, which is the default, extract reads from stdin)")
 	cols := flag.String("cols", "", "the column index(es) to be written out to stdout")
-	plain := flag.Bool("plain", false, "If only one column is provided, extract does not escape these line; instead it plainly prints it out (default false).")
-	delim := flag.String("delim", ",", "the CSV delimiter; default is ','")
-	skipHeader := flag.Bool("skipHeader", true, "skips the first header line (default true)")
+	plain := flag.Bool("plain", false, "If only one column is provided, extract does not escape these line; instead it plainly prints it out.")
+	delim := flag.String("delim", ",", "the CSV delimiter")
+	skipHeader := flag.Bool("skipHeader", false, "skips the first header line")
+	insertHeader := flag.String("insertHeader", "", "inserts a new header line to the output (comma-seperated strings)")
+	n := flag.Int("n", 0, "Stop after reading n lines (default 0 = unlimited).")
+	suppressWarnings := flag.Bool("suppress", false, "suppress warnings in the input data")
 	flag.Parse()
 
 	var indexes []int
@@ -52,8 +55,7 @@ func main() {
 
 	r, _ := utf8.DecodeRuneInString(*delim)
 	if r == utf8.RuneError {
-		log.Printf("delimiter contains an invalid value.")
-		os.Exit(1)
+		log.Fatal("delimiter contains an invalid value.")
 	}
 
 	var (
@@ -81,9 +83,13 @@ func main() {
 	if *skipHeader {
 		line++
 		headers, err := c.Read()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Could not parse header line (line %d): '%s'\n", line, headers)
+		if err != nil && !*suppressWarnings {
+			fmt.Fprintf(os.Stderr, "Could not parse header line (line %d, '%s'): %v\n", line, headers, err)
 		}
+	}
+
+	if *insertHeader != "" {
+		w.Write(strings.Split(*insertHeader, ","))
 	}
 
 	for {
@@ -93,12 +99,16 @@ func main() {
 			if err == io.EOF {
 				return
 			}
-			fmt.Fprintf(os.Stderr, "Could not parse line (line %d): '%s'\n", line, columns)
+			if !*suppressWarnings {
+				fmt.Fprintf(os.Stderr, "Could not parse line (line %d, '%s'): %v\n", line, columns, err)
+			}
 			continue
 		}
 
 		if len(columns) <= maxIndex {
-			fmt.Fprintf(os.Stderr, "Line has not enough columns (line %d): '%s'\n", line, columns)
+			if !*suppressWarnings {
+				fmt.Fprintf(os.Stderr, "Line has not enough columns (line %d): '%s'\n", line, columns)
+			}
 			continue
 		}
 
@@ -110,6 +120,10 @@ func main() {
 			fmt.Fprintf(os.Stdout, "%s\n", extractedColumns[0])
 		} else {
 			w.Write(extractedColumns)
+		}
+
+		if *n > 0 && line >= *n {
+			return
 		}
 	}
 }
