@@ -13,15 +13,15 @@ import (
 )
 
 func usage() {
-	fmt.Printf("filter prints out one or more columns from a CSV and reads from a file or stdin.\n\n")
+	fmt.Printf("extract prints out one or more columns from a CSV and reads from a file or stdin.\n\n")
 	flag.Usage()
 	os.Exit(1)
 }
 
 func main() {
-	filename := flag.String("filename", "", "CSV file (if empty, filter reads from stdin)")
+	filename := flag.String("filename", "", "CSV file (if empty, extract reads from stdin)")
 	cols := flag.String("cols", "", "the column index(es) to be written out to stdout")
-	plain := flag.Bool("plain", false, "If only one column is provided, filter does not escape these line; instead it plainly prints it out.")
+	plain := flag.Bool("plain", false, "If only one column is provided, extract does not escape these line; instead it plainly prints it out.")
 	flag.Parse()
 
 	var indexes []int
@@ -59,6 +59,7 @@ func main() {
 
 	c := csv.NewReader(bufio.NewReader(fd))
 	w := csv.NewWriter(bufio.NewWriter(os.Stdout))
+	defer w.Flush()
 
 	line := 0
 	for {
@@ -77,14 +78,14 @@ func main() {
 			continue
 		}
 
-		var filteredColumns []string
+		var extractedColumns []string
 		for _, i := range indexes {
-			filteredColumns = append(filteredColumns, columns[i])
+			extractedColumns = append(extractedColumns, columns[i])
 		}
-		if *plain && len(filteredColumns) == 1 {
-			fmt.Fprintf(os.Stdout, "%s\n", filteredColumns[0])
+		if *plain && len(extractedColumns) == 1 {
+			fmt.Fprintf(os.Stdout, "%s\n", extractedColumns[0])
 		} else {
-			w.Write(filteredColumns)
+			w.Write(extractedColumns)
 		}
 	}
 }
