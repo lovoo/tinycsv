@@ -83,30 +83,21 @@ func main() {
 						if err != nil {
 							panic(err)
 						}
-						p.X.Min = s.min - 4*stddev
-						p.X.Max = s.max + 4*stddev
+						p.X.Min = s.min - 1.5*stddev
+						p.X.Max = s.max + 1.5*stddev
 						p.Title.Text = fmt.Sprintf("Histogram for %s", s.name)
-						// p.Y.Scale = plot.LogScale{}
 
-						// Create a histogram of our values drawn
-						// from the standard normal.
-						plotterValues := make([]float64, 0, len(s.obsv))
-						for _, o := range s.obsv {
-							plotterValues = append(plotterValues, o+math.Abs(s.min)+0.1)
-						}
-						h, err := plotter.NewHist(plotter.Values(plotterValues), 100)
+						h, err := plotter.NewHist(plotter.Values(s.obsv), 16)
 						if err != nil {
 							panic(err)
 						}
-						// Normalize the area under the histogram to
-						// sum to one.
 						h.Normalize(1)
 						p.Add(h)
 
 						norm := plotter.NewFunction(func(x float64) float64 {
 							return 1.0 / (stddev * math.Sqrt(2*math.Pi)) * math.Exp(-((x-mean)*(x-mean))/(2*stddev*stddev))
 						})
-						norm.Samples = 50
+						norm.Samples = int(p.X.Max-p.X.Min) + 100
 						norm.Color = color.RGBA{R: 255, A: 255}
 						norm.Width = vg.Points(2)
 						p.Add(norm)
