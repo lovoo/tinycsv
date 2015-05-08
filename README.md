@@ -50,12 +50,12 @@ Usage of ./summary:
 ### Example
 
 ```
-$ extract -insertHeader abc -cols 0 -filename input.csv -n 1000000 -skipHeader | summary -plot -suppress
+$ extract -insertHeader foo -cols 0 -filename input.csv -n 1000000 -skipHeader | summary -plot -suppress
 
-	min		max		mean		stddev
-abc	-11.510000	647.890000	7.798770	7.843919
+      min         max          mean       stddev
+foo   -11.510000  647.890000   7.798770   7.843919
 ```
 
-The generated plot:
+A generated plot looks like:
 
 ![](https://raw.githubusercontent.com/Lovoo/tinycsv/master/histogram.png)
