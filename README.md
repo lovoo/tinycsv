@@ -19,10 +19,13 @@ extract prints out one or more columns from a CSV and reads from a file or stdin
 
 Usage of ./extract:
   -cols="": the column index(es) to be written out to stdout
-  -delim=",": the CSV delimiter; default is ','
+  -delim=",": the CSV delimiter
   -filename="": CSV file (if empty, which is the default, extract reads from stdin)
-  -plain=false: If only one column is provided, extract does not escape these line; instead it plainly prints it out (default false).
-  -skipHeader=true: skips the first header line (default true)
+  -insertHeader="": inserts a new header line to the output (comma-seperated strings)
+  -n=0: Stop after reading n lines (default 0 = unlimited).
+  -plain=false: If only one column is provided, extract does not escape these line; instead it plainly prints it out.
+  -skipHeader=false: skips the first header line
+  -suppress=false: suppress warnings in the input data
 ```
 
 ### Example
